@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Health Assistant</title>
+    <script>
+        async function sendQuery() {
+            const query = document.getElementById('query').value;
+            const responseDiv = document.getElementById('response');
+            responseDiv.innerHTML = '<div class="loading">Processing your query...</div>';
+
+            const response = await fetch('/ask', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ query })
+            });
+
+            const result = await response.json();
+            if (result.response) {
+                responseDiv.innerHTML = `<div class="response-content">${result.response}</div>`;
+            } else {
+                responseDiv.innerHTML = `<div class="error">Error: ${result.error}</div>`;
+            }
+        }
+    </script>
+    <style>
+        /* Global Styles */
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, #6dd5ed, #2193b0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+        }
+
+        textarea {
+            margin-top: 15px;
+            padding: 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            width: 80%;
+            max-width: 600px;
+            height: 150px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            resize: none;
+            outline: none;
+            transition: all 0.3s ease-in-out;
+        }
+
+        textarea:focus {
+            background: #fff;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 15px 50px;
+            background: linear-gradient(45deg, #ff416c, #ff4b2b);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s ease-in-out, background 0.3s ease-in-out;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        button:hover {
+            background: linear-gradient(45deg, #ff4b2b, #ff416c);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        h3 {
+            margin-top: 30px;
+            font-size: 1.5rem;
+            text-align: center;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        #response {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            color: #333;
+            width: 80%;
+            max-width: 600px;
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            word-wrap: break-word;
+        }
+
+        .loading {
+            font-size: 1.2rem;
+            color: #2193b0;
+            font-weight: bold;
+        }
+
+        .response-content {
+            font-size: 1rem;
+            color: #333;
+        }
+
+        .error {
+            color: #d9534f;
+            font-weight: bold;
+        }
+
+        /* Add subtle animations */
+        textarea, button, #response {
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>AI Health Assistant</h1>
+    <textarea id="query" placeholder="Enter your health-related query here..."></textarea>
+    <br>
+    <button onclick="sendQuery()">Ask</button>
+    <h3>Response:</h3>
+    <div id="response"></div>
+</body>
+</html>
